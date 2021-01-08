@@ -1,0 +1,10 @@
+.react-datepicker__tab-loop {
+  display: inline-block;
+}
+.react-datepicker-wrapper {
+  width: 135px;
+  height: 30px;
+}
+.ant-input-affix-wrapper {
+  height: 30px;
+}
