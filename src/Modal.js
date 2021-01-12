@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Select from "./Select";
 import Dateconfig from "./Dateconfig";
 import moment from "moment";
+import ColorSelect from "./Colorselect";
 
 const Modal1 = styled(Modal)`
   .ant-modal-title {
@@ -30,6 +31,7 @@ function Modal_test({ visible, onOk, onCancel, dateStart, dateEnd }) {
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
   const [isSwitch, setIsSwitch] = useState(false);
+  const [initColor, setInitColor] = useState("#ff7a45");
 
   const onChangeText = (e) => {
     setText(e.currentTarget.value);
@@ -57,6 +59,11 @@ function Modal_test({ visible, onOk, onCancel, dateStart, dateEnd }) {
     setIsSwitch(!isSwitch);
   };
 
+  const onColor = (color) => {
+    setInitColor(color);
+    console.log(color);
+  };
+
   function selectChange(value) {
     console.log(`selected ${value}`);
     setPeople(value);
@@ -68,8 +75,9 @@ function Modal_test({ visible, onOk, onCancel, dateStart, dateEnd }) {
         title="일정 등록"
         visible={visible}
         onOk={() => {
-          onOk(text, startDate, endDate, people);
+          onOk(text, startDate, endDate, people, initColor);
           setIsSwitch(false);
+          setInitColor("#ff7a45");
           setText("");
         }}
         onCancel={onCancel}
@@ -103,6 +111,7 @@ function Modal_test({ visible, onOk, onCancel, dateStart, dateEnd }) {
             onChangeEndDate={onChangeEndDate}
             isSwitch={isSwitch}
           />
+          <ColorSelect onColor={onColor} colors={initColor} />
         </div>
         {/* 일정제목입력창 */}
         <CalendarInput

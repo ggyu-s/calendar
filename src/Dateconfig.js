@@ -22,6 +22,7 @@ function Dateconfig({
   const changeStartDate = useCallback(
     (date) => {
       onChangeStartDate(date);
+      console.log("startCallback");
     },
     [onChangeStartDate]
   );
@@ -57,7 +58,6 @@ function Dateconfig({
           onChange={(date) => {
             setStartDate(date);
             changeStartDate(date);
-            console.log("start2");
           }}
           customInput={<Input suffix={<DownOutlined />} />}
         />
@@ -70,7 +70,6 @@ function Dateconfig({
             setIsStartDate(true);
             setStartDate(date);
             changeStartDate(date);
-            console.log("start1");
           }}
           customInput={<Input suffix={<DownOutlined />} />}
         />

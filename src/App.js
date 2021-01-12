@@ -24,15 +24,15 @@ function App() {
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const id = useRef(1);
 
-  const onOk = (text, start, end, people) => {
+  const onOk = (text, start, end, people, color) => {
     if (!text) {
       alert("일정을 등록해주세요.");
       return;
     }
     setIsVisible(false);
-    const color = ["black", "powderblue", "lightgreen", "orange", "grey"];
-    const background = color[Math.floor(Math.random() * 5)];
-    const border = background;
+    // const color = ["black", "powderblue", "lightgreen", "orange", "grey"];
+    // const background = color[Math.floor(Math.random() * 5)];
+    // const border = background;
     setEvents([
       ...events,
       {
@@ -40,8 +40,8 @@ function App() {
         title: text,
         start: start,
         end: end,
-        backgroundColor: background,
-        borderColor: border,
+        backgroundColor: color,
+        borderColor: color,
         people: people,
       },
     ]);
