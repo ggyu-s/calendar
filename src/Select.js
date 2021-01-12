@@ -34,9 +34,6 @@ function SelectPeople({ selectChange }) {
     },
   ];
 
-  //   function handleChange(value) {
-  //     console.log(`selected ${value}`);
-  //   }
   return (
     <ParticipantInput
       mode="multiple"

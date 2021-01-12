@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, Input, Checkbox } from "antd";
 import styled from "styled-components";
 import Select from "./Select";
 import Dateconfig from "./Dateconfig";
+import moment from "moment";
 
 const Modal1 = styled(Modal)`
   .ant-modal-title {
@@ -30,6 +31,8 @@ function Modal_test({ visible, onOk, onCancel, dateStart, dateEnd }) {
   const [text, setText] = useState("");
   const [checkbox, setCheckbox] = useState(false);
   const [people, setPeople] = useState("");
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
 
   const onChangeText = (e) => {
     setText(e.currentTarget.value);
@@ -37,6 +40,15 @@ function Modal_test({ visible, onOk, onCancel, dateStart, dateEnd }) {
 
   const onChangeCheckBox = (e) => {
     setCheckbox(e.target.checked);
+  };
+
+  // datepicker에 있는 날짜
+  const onChangeStartDate = (startDate) => {
+    setStartDate(moment(startDate).format("YYYY-MM-DD"));
+  };
+  // datepicker에 있는 날짜
+  const onChangeEndDate = (endDate) => {
+    setEndDate(moment(endDate).format("YYYY-MM-DD"));
   };
 
   function selectChange(value) {
@@ -50,8 +62,8 @@ function Modal_test({ visible, onOk, onCancel, dateStart, dateEnd }) {
         title="일정 등록"
         visible={visible}
         onOk={() => {
-          onOk(text, dateStart, dateEnd, people);
-          console.log(dateStart, dateEnd);
+          onOk(text, startDate, endDate, people);
+          console.log(startDate, endDate);
           setText("");
         }}
         onCancel={onCancel}
@@ -60,12 +72,20 @@ function Modal_test({ visible, onOk, onCancel, dateStart, dateEnd }) {
         width="40rem"
         centered
       >
-        <Dateconfig dateStart={dateStart} dateEnd={dateEnd} />
+        {/* datepicker */}
+        <Dateconfig
+          dateStart={dateStart}
+          dateEnd={dateEnd}
+          onChangeStartDate={onChangeStartDate}
+          onChangeEndDate={onChangeEndDate}
+        />
+        {/* 일정제목입력창 */}
         <CalendarInput
           placeholder="일정을 입력해주세요"
           value={text}
           onChange={onChangeText}
         />
+        {/* 체크박스 클릭시 그룹에 있는 사람지정 할 수 있음 */}
         {checkbox && <Select selectChange={selectChange} />}
         <Checkbox style={{ marginTop: "10px" }} onChange={onChangeCheckBox}>
           참석자 지정

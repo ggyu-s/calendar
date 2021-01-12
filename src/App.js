@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugsin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -22,7 +22,6 @@ function App() {
    * 일정 확인 모달
    */
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
-  const [content, setContent] = useState();
   const id = useRef(1);
 
   const onOk = (text, start, end, people) => {
@@ -48,6 +47,7 @@ function App() {
     ]);
     id.current++;
   };
+
   const onCancel = () => {
     setIsVisible(false);
     setIsDrawerVisible(false);
@@ -55,6 +55,7 @@ function App() {
 
   return (
     <>
+      {/* 캘린더 */}
       <div style={{ width: "90%", height: "1000px", margin: "0 auto" }}>
         <FullCalendar
           plugins={[dayGridPlugsin, interactionPlugin]}
@@ -68,8 +69,8 @@ function App() {
           select={(info) => {
             console.log(info);
             setIsVisible(true);
-            setDateStart(info.startStr);
-            setDateEnd(info.endStr);
+            setDateStart(info.start);
+            setDateEnd(info.end);
           }}
           headerToolbar={{
             left: "prev,next today",
@@ -94,6 +95,7 @@ function App() {
           onCancel={onCancel}
           dateStart={dateStart}
           dateEnd={dateEnd}
+          isStartDate={false}
         />
         {/* 일정 확인 모달 컴포넌트 */}
         <Modal2 visible={isDrawerVisible} onClose={onCancel} event={event} />
