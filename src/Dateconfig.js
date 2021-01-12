@@ -36,7 +36,7 @@ function Dateconfig({
   useEffect(() => {
     onChangeStartDate(dateStart);
     setIsStartDate(false);
-  }, [dateStart, onChangeStartDate]);
+  }, [dateStart]);
   // fullcalendar에서 날짜 클릭시 datepicker에서 클릭한 날짜 표시
   useEffect(() => {
     onChangeEndDate(dateEnd);
@@ -44,7 +44,7 @@ function Dateconfig({
     if (isSwitch) {
       return onChangeEndDate("");
     }
-  }, [dateEnd, isSwitch, onChangeEndDate]);
+  }, [dateEnd, isSwitch]);
 
   return (
     <>
@@ -57,6 +57,7 @@ function Dateconfig({
           onChange={(date) => {
             setStartDate(date);
             changeStartDate(date);
+            console.log("start2");
           }}
           customInput={<Input suffix={<DownOutlined />} />}
         />
@@ -65,10 +66,11 @@ function Dateconfig({
           locale={ko}
           dateFormat="yyyy-MM-dd"
           selected={dateStart}
-          onChange={(date, event) => {
+          onChange={(date) => {
             setIsStartDate(true);
             setStartDate(date);
             changeStartDate(date);
+            console.log("start1");
           }}
           customInput={<Input suffix={<DownOutlined />} />}
         />
