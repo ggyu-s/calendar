@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugsin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -67,7 +67,6 @@ function App() {
           selectable
           dateClick={(info) => {}}
           select={(info) => {
-            console.log(info);
             setIsVisible(true);
             setDateStart(info.start);
             setDateEnd(info.end);

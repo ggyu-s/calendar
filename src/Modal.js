@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Modal, Input, Checkbox } from "antd";
+import React, { useState } from "react";
+import { Modal, Input, Checkbox, Switch } from "antd";
 import styled from "styled-components";
 import Select from "./Select";
 import Dateconfig from "./Dateconfig";
@@ -17,10 +17,6 @@ const Modal1 = styled(Modal)`
     height: 1.9rem;
   }
 `;
-const Datediv = styled.div`
-  font-size: 13px;
-  margin-bottom: 5px;
-`;
 const CalendarInput = styled(Input)`
   padding: 10px;
   height: 30px;
@@ -33,6 +29,7 @@ function Modal_test({ visible, onOk, onCancel, dateStart, dateEnd }) {
   const [people, setPeople] = useState("");
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
+  const [isSwitch, setIsSwitch] = useState(false);
 
   const onChangeText = (e) => {
     setText(e.currentTarget.value);
@@ -48,7 +45,16 @@ function Modal_test({ visible, onOk, onCancel, dateStart, dateEnd }) {
   };
   // datepicker에 있는 날짜
   const onChangeEndDate = (endDate) => {
+    if (isSwitch) {
+      return setEndDate(endDate);
+    }
     setEndDate(moment(endDate).format("YYYY-MM-DD"));
+  };
+
+  // switch 클릭하면 당일일정등록만 가능
+  const onChangeSwitch = () => {
+    console.log("switch");
+    setIsSwitch(!isSwitch);
   };
 
   function selectChange(value) {
@@ -63,7 +69,7 @@ function Modal_test({ visible, onOk, onCancel, dateStart, dateEnd }) {
         visible={visible}
         onOk={() => {
           onOk(text, startDate, endDate, people);
-          console.log(startDate, endDate);
+          setIsSwitch(false);
           setText("");
         }}
         onCancel={onCancel}
@@ -72,13 +78,32 @@ function Modal_test({ visible, onOk, onCancel, dateStart, dateEnd }) {
         width="40rem"
         centered
       >
-        {/* datepicker */}
-        <Dateconfig
-          dateStart={dateStart}
-          dateEnd={dateEnd}
-          onChangeStartDate={onChangeStartDate}
-          onChangeEndDate={onChangeEndDate}
-        />
+        <div style={{ marginBottom: "10px" }}>
+          <div style={{ display: "inline-block", width: "100px" }}>
+            <Switch
+              style={{ width: "48%" }}
+              onChange={() => onChangeSwitch()}
+              checked={isSwitch}
+            />{" "}
+            <div
+              style={{
+                width: "45%",
+                display: "inline-block",
+                textAlign: "center",
+              }}
+            >
+              종일
+            </div>
+          </div>
+          {/* datepicker */}
+          <Dateconfig
+            dateStart={dateStart}
+            dateEnd={dateEnd}
+            onChangeStartDate={onChangeStartDate}
+            onChangeEndDate={onChangeEndDate}
+            isSwitch={isSwitch}
+          />
+        </div>
         {/* 일정제목입력창 */}
         <CalendarInput
           placeholder="일정을 입력해주세요"
