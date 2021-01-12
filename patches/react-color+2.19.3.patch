@@ -1,0 +1,13 @@
+diff --git a/node_modules/react-color/lib/components/block/Block.js b/node_modules/react-color/lib/components/block/Block.js
+index c4e04f3..30d3c2e 100644
+--- a/node_modules/react-color/lib/components/block/Block.js
++++ b/node_modules/react-color/lib/components/block/Block.js
+@@ -90,7 +90,7 @@ var Block = exports.Block = function Block(_ref) {
+         position: 'absolute',
+         top: '-10px',
+         left: '50%',
+-        marginLeft: '-10px'
++        marginLeft: '50px'
+       },
+       input: {
+         width: '100%',
