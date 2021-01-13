@@ -1,15 +1,39 @@
-import "./App.css";
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugsin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import Modal from "./Modal";
+import { Modal } from "antd";
+import Modal1 from "./Modal";
 import Modal2 from "./Modal2";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
 
+const users = [
+  {
+    id: 1,
+    name: "nive",
+  },
+  {
+    id: 2,
+    name: "sam",
+  },
+  {
+    id: 3,
+    name: "gyu",
+  },
+  {
+    id: 4,
+    name: "jung",
+  },
+  {
+    id: 5,
+    name: "cheol",
+  },
+];
 /**
  * 캘린더 컴포넌트
  */
 function App() {
+  const { confirm } = Modal;
   /**
    * 일정 등록 모달
    */
@@ -33,6 +57,7 @@ function App() {
     // const color = ["black", "powderblue", "lightgreen", "orange", "grey"];
     // const background = color[Math.floor(Math.random() * 5)];
     // const border = background;
+
     setEvents([
       ...events,
       {
@@ -42,7 +67,7 @@ function App() {
         end: end,
         backgroundColor: color,
         borderColor: color,
-        people: people,
+        members: people,
       },
     ]);
     id.current++;
@@ -52,6 +77,23 @@ function App() {
     setIsVisible(false);
     setIsDrawerVisible(false);
   };
+
+  const remove = useCallback(
+    (eventId) => {
+      return confirm({
+        icon: <ExclamationCircleOutlined />,
+        content: <div>삭제하시겠습니까?</div>,
+        onOk() {
+          setEvents([...events.filter((p) => p.id !== eventId)]);
+          setIsDrawerVisible(false);
+        },
+        onCancel() {
+          console.log("Cancel");
+        },
+      });
+    },
+    [events, confirm]
+  );
 
   return (
     <>
@@ -79,7 +121,7 @@ function App() {
           locale="ko"
           eventClick={(e) => {
             console.log(events);
-            console.log(e.event._def.publicId);
+            console.log(e);
             setEvent(
               ...events.filter((p) => p.id === Number(e.event._def.publicId))
             );
@@ -88,16 +130,23 @@ function App() {
           }}
         />
         {/*일정 등록 모달 컴포넌트 */}
-        <Modal
+        <Modal1
           visible={isVisible}
           onOk={onOk}
           onCancel={onCancel}
           dateStart={dateStart}
           dateEnd={dateEnd}
           isStartDate={false}
+          users={users}
         />
         {/* 일정 확인 모달 컴포넌트 */}
-        <Modal2 visible={isDrawerVisible} onClose={onCancel} event={event} />
+        <Modal2
+          visible={isDrawerVisible}
+          onClose={onCancel}
+          event={event}
+          remove={remove}
+          users={users}
+        />
       </div>
     </>
   );

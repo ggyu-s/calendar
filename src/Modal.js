@@ -23,8 +23,7 @@ const CalendarInput = styled(Input)`
   height: 30px;
   font-size: 12px;
 `;
-
-function Modal_test({ visible, onOk, onCancel, dateStart, dateEnd }) {
+function Modal_test({ visible, onOk, onCancel, dateStart, dateEnd, users }) {
   const [text, setText] = useState("");
   const [checkbox, setCheckbox] = useState(false);
   const [people, setPeople] = useState("");
@@ -58,12 +57,11 @@ function Modal_test({ visible, onOk, onCancel, dateStart, dateEnd }) {
     console.log("switch");
     setIsSwitch(!isSwitch);
   };
-
+  // 캘린더 일정에 background color 변경
   const onColor = (color) => {
     setInitColor(color);
-    console.log(color);
   };
-
+  // 지정한사람만 볼 수 있도록 등록
   function selectChange(value) {
     console.log(`selected ${value}`);
     setPeople(value);
@@ -78,6 +76,7 @@ function Modal_test({ visible, onOk, onCancel, dateStart, dateEnd }) {
           onOk(text, startDate, endDate, people, initColor);
           setIsSwitch(false);
           setInitColor("#ff7a45");
+          setCheckbox(false);
           setText("");
         }}
         onCancel={onCancel}
@@ -120,8 +119,12 @@ function Modal_test({ visible, onOk, onCancel, dateStart, dateEnd }) {
           onChange={onChangeText}
         />
         {/* 체크박스 클릭시 그룹에 있는 사람지정 할 수 있음 */}
-        {checkbox && <Select selectChange={selectChange} />}
-        <Checkbox style={{ marginTop: "10px" }} onChange={onChangeCheckBox}>
+        {checkbox && <Select selectChange={selectChange} users={users} />}
+        <Checkbox
+          style={{ marginTop: "10px" }}
+          checked={checkbox}
+          onChange={onChangeCheckBox}
+        >
           참석자 지정
         </Checkbox>
       </Modal1>

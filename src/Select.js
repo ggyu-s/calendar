@@ -8,31 +8,8 @@ const ParticipantInput = styled(Select)`
   font-size: 12px;
 `;
 
-function SelectPeople({ selectChange }) {
+function SelectPeople({ selectChange, users }) {
   const { Option } = Select;
-
-  const children = [
-    {
-      id: 1,
-      name: "nive",
-    },
-    {
-      id: 2,
-      name: "sam",
-    },
-    {
-      id: 3,
-      name: "gyu",
-    },
-    {
-      id: 4,
-      name: "jung",
-    },
-    {
-      id: 5,
-      name: "cheol",
-    },
-  ];
 
   return (
     <ParticipantInput
@@ -41,8 +18,10 @@ function SelectPeople({ selectChange }) {
       placeholder="참가자"
       onChange={selectChange}
     >
-      {children.map((a) => (
-        <Option key={a.id}>{a.name}</Option>
+      {users.map((a) => (
+        <Option key={a.id} value={a.name}>
+          {a.name}
+        </Option>
       ))}
     </ParticipantInput>
   );

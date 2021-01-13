@@ -6,15 +6,12 @@ import { BlockPicker } from "react-color";
  */
 function ColorSelect({ onColor, colors }) {
   const [dispalyColors, setDispalyColors] = useState(false);
-  const [initColor, setInitColor] = useState(colors);
 
   const onClick = () => {
     setDispalyColors(true);
   };
   const onChangeColor = (color) => {
-    console.log(color);
     onColor(color.hex);
-    // setInitColor(color.hex);
   };
   const onClose = () => {
     setDispalyColors(false);
@@ -24,13 +21,14 @@ function ColorSelect({ onColor, colors }) {
       <div
         style={{
           height: "20px",
-          width: "50px",
+          width: "20px",
           background: colors,
-          borderRadius: "25px",
+          borderRadius: "50%",
           display: "inline-block",
           position: "absolute",
           right: "24px",
           top: "71px",
+          cursor: "pointer",
         }}
         onClick={onClick}
       ></div>
