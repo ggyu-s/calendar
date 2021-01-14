@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { DownOutlined } from "@ant-design/icons";
@@ -12,98 +12,52 @@ function Dateconfig({
   onChangeStartDate,
   onChangeEndDate,
   isSwitch,
+  isUpdate,
+  isClickDate,
+  isClickDateHandler,
+  isEndClickDate,
+  isEndClickDateHandler,
+  changeStart,
+  changeEnd,
 }) {
-  const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
-  const [isStartDate, setIsStartDate] = useState(false);
-  const [isEndDate, setIsEndDate] = useState(false);
-
-  // datepicker 날짜 선택시
-  const changeStartDate = useCallback(
-    (date) => {
-      onChangeStartDate(date);
-      console.log("startCallback");
-    },
-    [onChangeStartDate]
-  );
-  // datepicker 날짜 선택시
-  const changeEndDate = useCallback(
-    (date) => {
-      onChangeEndDate(date);
-    },
-    [onChangeEndDate]
-  );
-  // fullcalendar에서 날짜 클릭시 datepicker에서 클릭한 날짜 표시
-  useEffect(() => {
-    onChangeStartDate(dateStart);
-    setIsStartDate(false);
-  }, [dateStart]);
-  // fullcalendar에서 날짜 클릭시 datepicker에서 클릭한 날짜 표시
-  useEffect(() => {
-    onChangeEndDate(dateEnd);
-    setIsEndDate(false);
-    if (isSwitch) {
-      return onChangeEndDate("");
-    }
-  }, [dateEnd, isSwitch]);
-
   return (
     <>
       {/* 클린한 시작날짜를 표시 */}
-      {isStartDate ? (
-        <DatePicker
-          locale={ko}
-          dateFormat="yyyy-MM-dd"
-          selected={startDate}
-          onChange={(date) => {
-            setStartDate(date);
-            changeStartDate(date);
-          }}
-          customInput={<Input suffix={<DownOutlined />} />}
-        />
-      ) : (
-        <DatePicker
-          locale={ko}
-          dateFormat="yyyy-MM-dd"
-          selected={dateStart}
-          onChange={(date) => {
-            setIsStartDate(true);
-            setStartDate(date);
-            changeStartDate(date);
-          }}
-          customInput={<Input suffix={<DownOutlined />} />}
-        />
-      )}
-      {!isSwitch && <span> - </span>}
+      <DatePicker
+        locale={ko}
+        dateFormat="yyyy-MM-dd"
+        selected={
+          isClickDate
+            ? new Date(changeStart)
+            : isUpdate
+            ? new Date(dateStart)
+            : dateStart
+        }
+        onChange={(date) => {
+          isClickDateHandler(true);
+          onChangeStartDate(date);
+        }}
+        customInput={<Input suffix={<DownOutlined />} />}
+      />
       {/* 클린한 끝나는 날짜를 표시 */}
-      {!isSwitch ? (
-        isEndDate ? (
-          <DatePicker
-            locale={ko}
-            dateFormat="yyyy-MM-dd"
-            selected={endDate}
-            onChange={(date) => {
-              setEndDate(date);
-              changeEndDate(date);
-            }}
-            customInput={<Input suffix={<DownOutlined />} />}
-          />
-        ) : (
-          <DatePicker
-            locale={ko}
-            dateFormat="yyyy-MM-dd"
-            selected={dateEnd}
-            onChange={(date) => {
-              setIsEndDate(true);
-              setEndDate(date);
-              changeEndDate(date);
-            }}
-            customInput={<Input suffix={<DownOutlined />} />}
-          />
-        )
-      ) : (
-        <></>
-      )}
+      <span> - </span>
+      <DatePicker
+        locale={ko}
+        dateFormat="yyyy-MM-dd"
+        selected={
+          isEndClickDate
+            ? new Date(changeEnd)
+            : isUpdate
+            ? new Date(dateEnd)
+            : dateEnd
+        }
+        onChange={(date) => {
+          isEndClickDateHandler(true);
+          onChangeEndDate(date);
+        }}
+        disabled={isSwitch}
+        customInput={<Input suffix={<DownOutlined />} />}
+      />
     </>
   );
 }

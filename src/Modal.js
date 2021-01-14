@@ -3,7 +3,6 @@ import { Modal, Input, Checkbox, Switch } from "antd";
 import styled from "styled-components";
 import Select from "./Select";
 import Dateconfig from "./Dateconfig";
-import moment from "moment";
 import ColorSelect from "./Colorselect";
 
 const Modal1 = styled(Modal)`
@@ -23,39 +22,44 @@ const CalendarInput = styled(Input)`
   height: 30px;
   font-size: 12px;
 `;
-function Modal_test({ visible, onOk, onCancel, dateStart, dateEnd, users }) {
+function Modal_test({
+  visible,
+  onOk,
+  onCancel,
+  dateStart,
+  dateEnd,
+  users,
+  isUpdate,
+  isClickDate,
+  isClickDateHandler,
+  isEndClickDate,
+  isEndClickDateHandler,
+  onChangeStartDate,
+  changeStart,
+  onChangeEndDate,
+  changeEnd,
+}) {
   const [text, setText] = useState("");
   const [checkbox, setCheckbox] = useState(false);
   const [people, setPeople] = useState("");
-  const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
   const [isSwitch, setIsSwitch] = useState(false);
   const [initColor, setInitColor] = useState("#ff7a45");
-
+  // 입력창 onChange를 이용하여 저장
   const onChangeText = (e) => {
     setText(e.currentTarget.value);
   };
 
+  // checkBox가 true인지 false인지 저장
   const onChangeCheckBox = (e) => {
     setCheckbox(e.target.checked);
   };
-
-  // datepicker에 있는 날짜
-  const onChangeStartDate = (startDate) => {
-    setStartDate(moment(startDate).format("YYYY-MM-DD"));
-  };
-  // datepicker에 있는 날짜
-  const onChangeEndDate = (endDate) => {
-    if (isSwitch) {
-      return setEndDate(endDate);
-    }
-    setEndDate(moment(endDate).format("YYYY-MM-DD"));
-  };
-
   // switch 클릭하면 당일일정등록만 가능
   const onChangeSwitch = () => {
-    console.log("switch");
     setIsSwitch(!isSwitch);
+    if (!isSwitch) {
+      onChangeEndDate(changeStart, isSwitch);
+      isEndClickDateHandler(true);
+    }
   };
   // 캘린더 일정에 background color 변경
   const onColor = (color) => {
@@ -63,23 +67,35 @@ function Modal_test({ visible, onOk, onCancel, dateStart, dateEnd, users }) {
   };
   // 지정한사람만 볼 수 있도록 등록
   function selectChange(value) {
-    console.log(`selected ${value}`);
     setPeople(value);
   }
-
+  // 일정을 입력한 뒤 Enter키를 누를 시 등록
+  const onKeyDown = (e) => {
+    if (e.keyCode === 13) {
+      onOk(text, people, initColor);
+      setIsSwitch(false);
+      setInitColor("#ff7a45");
+      setCheckbox(false);
+      setText("");
+    }
+  };
   return (
     <>
+      {/* 일정을 등록할 수 있는  모달 */}
       <Modal1
         title="일정 등록"
         visible={visible}
         onOk={() => {
-          onOk(text, startDate, endDate, people, initColor);
+          onOk(text, people, initColor);
           setIsSwitch(false);
           setInitColor("#ff7a45");
           setCheckbox(false);
           setText("");
         }}
-        onCancel={onCancel}
+        onCancel={() => {
+          onCancel();
+          setIsSwitch(false);
+        }}
         okText="등록"
         cancelText="취소"
         width="40rem"
@@ -87,6 +103,7 @@ function Modal_test({ visible, onOk, onCancel, dateStart, dateEnd, users }) {
       >
         <div style={{ marginBottom: "10px" }}>
           <div style={{ display: "inline-block", width: "100px" }}>
+            {/* 하루 일정만 등록하고 싶을때 선택 할 수 있는 버튼 */}
             <Switch
               style={{ width: "48%" }}
               onChange={() => onChangeSwitch()}
@@ -109,6 +126,13 @@ function Modal_test({ visible, onOk, onCancel, dateStart, dateEnd, users }) {
             onChangeStartDate={onChangeStartDate}
             onChangeEndDate={onChangeEndDate}
             isSwitch={isSwitch}
+            isUpdate={isUpdate}
+            isClickDate={isClickDate}
+            isClickDateHandler={isClickDateHandler}
+            isEndClickDate={isEndClickDate}
+            isEndClickDateHandler={isEndClickDateHandler}
+            changeStart={changeStart}
+            changeEnd={changeEnd}
           />
           <ColorSelect onColor={onColor} colors={initColor} />
         </div>
@@ -117,6 +141,7 @@ function Modal_test({ visible, onOk, onCancel, dateStart, dateEnd, users }) {
           placeholder="일정을 입력해주세요"
           value={text}
           onChange={onChangeText}
+          onKeyDown={onKeyDown}
         />
         {/* 체크박스 클릭시 그룹에 있는 사람지정 할 수 있음 */}
         {checkbox && <Select selectChange={selectChange} users={users} />}

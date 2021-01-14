@@ -8,6 +8,9 @@ const ParticipantInput = styled(Select)`
   font-size: 12px;
 `;
 
+/**
+ * 그룹에 가입된 사람을 선택할 수 있음
+ */
 function SelectPeople({ selectChange, users }) {
   const { Option } = Select;
 
