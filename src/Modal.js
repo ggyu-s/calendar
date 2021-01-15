@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, Input, Checkbox, Switch } from "antd";
 import styled from "styled-components";
 import Select from "./Select";
@@ -38,20 +38,40 @@ function Modal_test({
   changeStart,
   onChangeEndDate,
   changeEnd,
+  title,
+  members,
+  onInitUpdate,
 }) {
   const [text, setText] = useState("");
   const [checkbox, setCheckbox] = useState(false);
   const [people, setPeople] = useState("");
   const [isSwitch, setIsSwitch] = useState(false);
   const [initColor, setInitColor] = useState("#ff7a45");
+  const [updateText, setUpdateText] = useState("");
   // 입력창 onChange를 이용하여 저장
   const onChangeText = (e) => {
-    setText(e.currentTarget.value);
+    if (isUpdate) {
+      setUpdateText(e.currentTarget.value);
+    } else {
+      setText(e.currentTarget.value);
+    }
   };
+  useEffect(() => {
+    setUpdateText(title);
+  }, [title]);
+
+  useEffect(() => {
+    if (isUpdate) {
+      members && setCheckbox(true);
+    }
+  }, [members, isUpdate]);
 
   // checkBox가 true인지 false인지 저장
   const onChangeCheckBox = (e) => {
     setCheckbox(e.target.checked);
+    if (!e.target.checked) {
+      setPeople("");
+    }
   };
   // switch 클릭하면 당일일정등록만 가능
   const onChangeSwitch = () => {
@@ -72,7 +92,11 @@ function Modal_test({
   // 일정을 입력한 뒤 Enter키를 누를 시 등록
   const onKeyDown = (e) => {
     if (e.keyCode === 13) {
-      onOk(text, people, initColor);
+      if (isUpdate) {
+        onOk(updateText, people, initColor, isSwitch);
+      } else {
+        onOk(text, people, initColor, isSwitch);
+      }
       setIsSwitch(false);
       setInitColor("#ff7a45");
       setCheckbox(false);
@@ -86,15 +110,28 @@ function Modal_test({
         title="일정 등록"
         visible={visible}
         onOk={() => {
-          onOk(text, people, initColor);
+          if (isUpdate) {
+            onOk(updateText, people, initColor, isSwitch);
+            onInitUpdate(false);
+          } else {
+            onOk(text, people, initColor, isSwitch);
+          }
           setIsSwitch(false);
           setInitColor("#ff7a45");
           setCheckbox(false);
+          setPeople("");
           setText("");
         }}
         onCancel={() => {
           onCancel();
           setIsSwitch(false);
+          setCheckbox(false);
+          setInitColor("#ff7a45");
+          setPeople("");
+          setText("");
+          if (isUpdate) {
+            onInitUpdate(false);
+          }
         }}
         okText="등록"
         cancelText="취소"
@@ -134,17 +171,26 @@ function Modal_test({
             changeStart={changeStart}
             changeEnd={changeEnd}
           />
+          {/* 색상 선택 */}
           <ColorSelect onColor={onColor} colors={initColor} />
         </div>
         {/* 일정제목입력창 */}
         <CalendarInput
           placeholder="일정을 입력해주세요"
-          value={text}
+          value={isUpdate ? updateText : text}
           onChange={onChangeText}
           onKeyDown={onKeyDown}
         />
         {/* 체크박스 클릭시 그룹에 있는 사람지정 할 수 있음 */}
-        {checkbox && <Select selectChange={selectChange} users={users} />}
+        {checkbox && (
+          <Select
+            selectChange={selectChange}
+            users={users}
+            members={members}
+            isUpdate={isUpdate}
+            checkBox={checkbox}
+          />
+        )}
         <Checkbox
           style={{ marginTop: "10px" }}
           checked={checkbox}

@@ -11,8 +11,15 @@ const ParticipantInput = styled(Select)`
 /**
  * 그룹에 가입된 사람을 선택할 수 있음
  */
-function SelectPeople({ selectChange, users }) {
+function SelectPeople({ selectChange, users, members, checkBox }) {
   const { Option } = Select;
+
+  const defaultValue = () => {
+    if (!checkBox) {
+      return undefined;
+    }
+    return members !== "" ? members : undefined;
+  };
 
   return (
     <ParticipantInput
@@ -20,6 +27,7 @@ function SelectPeople({ selectChange, users }) {
       style={{ width: "100%" }}
       placeholder="참가자"
       onChange={selectChange}
+      defaultValue={defaultValue()}
     >
       {users.map((a) => (
         <Option key={a.id} value={a.name}>

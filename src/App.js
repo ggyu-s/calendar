@@ -78,27 +78,26 @@ function App() {
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const id = useRef(1);
 
-  const onOk = (text, people, color) => {
+  // 일정 등록
+  const onOk = (text, people, color, isSwitch) => {
     if (!text) {
       alert("일정을 등록해주세요.");
       return;
     }
     setIsVisible(false);
-
     setEvents([
       ...events,
       {
         id: id.current,
         title: text,
         start: changeStart,
-        end: changeEnd,
+        end: isSwitch ? "" : changeEnd,
         backgroundColor: color,
         borderColor: color,
         members: people,
       },
     ]);
     id.current++;
-
     setIsClickDate(false);
   };
 
@@ -108,6 +107,7 @@ function App() {
     setIsClickDate(false);
   }, []);
 
+  // 일정 삭제
   const remove = useCallback(
     (eventId) => {
       return confirm({
@@ -124,16 +124,18 @@ function App() {
     },
     [events, confirm]
   );
+
+  // 일정 수정
   const update = useCallback(
-    (id, text, start, end, people, color) => {
+    (id, text, people, color) => {
       setEvents(
         events.map((event) => {
           return event.id === id
             ? {
                 ...event,
                 title: text,
-                start: start,
-                end: end,
+                start: changeStart,
+                end: changeEnd,
                 backgroundColor: color,
                 borderColor: color,
                 members: people,
@@ -141,8 +143,9 @@ function App() {
             : event;
         })
       );
+      setIsDrawerVisible(false);
     },
-    [events]
+    [events, changeStart, changeEnd]
   );
 
   return (
@@ -208,6 +211,14 @@ function App() {
           update={update}
           onOk={onOk}
           users={users}
+          isClickDate={isClickDate}
+          isClickDateHandler={isClickDateHandler}
+          isEndClickDate={isEndClickDate}
+          isEndClickDateHandler={isEndClickDateHandler}
+          onChangeStartDate={onChangeStartDate}
+          changeStart={changeStart}
+          onChangeEndDate={onChangeEndDate}
+          changeEnd={changeEnd}
         />
       </div>
     </>
