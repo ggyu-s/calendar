@@ -84,7 +84,7 @@ function Modal2({
         <div>일정날짜</div>
         <div>
           <span>{event.start}</span>
-          {event.end !== "" ? (
+          {event.start !== event.end ? (
             <>
               <span> - </span>
               <span>{event.end}</span>
@@ -116,6 +116,7 @@ function Modal2({
         changeStart={changeStart}
         onChangeEndDate={onChangeEndDate}
         changeEnd={changeEnd}
+        saveColor={event.backgroundColor}
       />
     </>
   );

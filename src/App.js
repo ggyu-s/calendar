@@ -157,7 +157,7 @@ function App() {
           initialView="dayGridMonth"
           timeZone="UTC"
           events={events}
-          editable={true}
+          editable={false}
           dayMaxEvents={true}
           selectable
           // 날짜 클릭시 모달창 띄우기

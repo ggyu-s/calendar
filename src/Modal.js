@@ -41,6 +41,7 @@ function Modal_test({
   title,
   members,
   onInitUpdate,
+  saveColor,
 }) {
   const [text, setText] = useState("");
   const [checkbox, setCheckbox] = useState(false);
@@ -57,14 +58,18 @@ function Modal_test({
     }
   };
   useEffect(() => {
-    setUpdateText(title);
-  }, [title]);
-
-  useEffect(() => {
     if (isUpdate) {
       members && setCheckbox(true);
+      setUpdateText(title);
+      setInitColor(saveColor);
     }
-  }, [members, isUpdate]);
+  }, [title, members, isUpdate, saveColor]);
+
+  // useEffect(() => {
+  //   if (isUpdate) {
+  //     members && setCheckbox(true);
+  //   }
+  // }, [members, isUpdate]);
 
   // checkBox가 true인지 false인지 저장
   const onChangeCheckBox = (e) => {
