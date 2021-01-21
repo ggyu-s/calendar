@@ -14,9 +14,9 @@ function Dateconfig({
   isSwitch,
   isUpdate,
   isClickDate,
-  isClickDateHandler,
+  setIsClickDate,
   isEndClickDate,
-  isEndClickDateHandler,
+  setIsEndClickDate,
   changeStart,
   changeEnd,
 }) {
@@ -34,7 +34,7 @@ function Dateconfig({
             : dateStart
         }
         onChange={(date) => {
-          isClickDateHandler(true);
+          setIsClickDate(true);
           onChangeStartDate(date);
         }}
         customInput={<Input suffix={<DownOutlined />} />}
@@ -52,7 +52,7 @@ function Dateconfig({
             : dateEnd
         }
         onChange={(date) => {
-          isEndClickDateHandler(true);
+          setIsEndClickDate(true);
           onChangeEndDate(date);
         }}
         disabled={isSwitch}
@@ -61,5 +61,9 @@ function Dateconfig({
     </>
   );
 }
+Dateconfig.defaultProps = {
+  isClickDate: false,
+  isEndClickDate: false,
+};
 
 export default Dateconfig;

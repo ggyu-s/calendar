@@ -30,10 +30,6 @@ function Modal2({
   remove,
   update,
   users,
-  isClickDate,
-  isClickDateHandler,
-  isEndClickDate,
-  isEndClickDateHandler,
   onChangeStartDate,
   changeStart,
   onChangeEndDate,
@@ -108,10 +104,6 @@ function Modal2({
         title={event.title}
         members={event.members}
         onInitUpdate={onInitUpdate}
-        isClickDate={isClickDate}
-        isClickDateHandler={isClickDateHandler}
-        isEndClickDate={isEndClickDate}
-        isEndClickDateHandler={isEndClickDateHandler}
         onChangeStartDate={onChangeStartDate}
         changeStart={changeStart}
         onChangeEndDate={onChangeEndDate}

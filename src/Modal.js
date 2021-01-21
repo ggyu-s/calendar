@@ -30,10 +30,6 @@ function Modal_test({
   dateEnd,
   users,
   isUpdate,
-  isClickDate,
-  isClickDateHandler,
-  isEndClickDate,
-  isEndClickDateHandler,
   onChangeStartDate,
   changeStart,
   onChangeEndDate,
@@ -49,6 +45,9 @@ function Modal_test({
   const [isSwitch, setIsSwitch] = useState(false);
   const [initColor, setInitColor] = useState("#ff7a45");
   const [updateText, setUpdateText] = useState("");
+  const [isClickDate, setIsClickDate] = useState(false); // 시작 날짜
+  const [isEndClickDate, setIsEndClickDate] = useState(false); // 끝 날짜
+
   // 입력창 onChange를 이용하여 저장
   const onChangeText = (e) => {
     if (isUpdate) {
@@ -57,6 +56,7 @@ function Modal_test({
       setText(e.currentTarget.value);
     }
   };
+
   useEffect(() => {
     if (isUpdate) {
       members && setCheckbox(true);
@@ -64,12 +64,6 @@ function Modal_test({
       setInitColor(saveColor);
     }
   }, [title, members, isUpdate, saveColor]);
-
-  // useEffect(() => {
-  //   if (isUpdate) {
-  //     members && setCheckbox(true);
-  //   }
-  // }, [members, isUpdate]);
 
   // checkBox가 true인지 false인지 저장
   const onChangeCheckBox = (e) => {
@@ -83,7 +77,7 @@ function Modal_test({
     setIsSwitch(!isSwitch);
     if (!isSwitch) {
       onChangeEndDate(changeStart, isSwitch);
-      isEndClickDateHandler(true);
+      setIsEndClickDate(true);
     }
   };
   // 캘린더 일정에 background color 변경
@@ -170,9 +164,9 @@ function Modal_test({
             isSwitch={isSwitch}
             isUpdate={isUpdate}
             isClickDate={isClickDate}
-            isClickDateHandler={isClickDateHandler}
+            setIsClickDate={setIsClickDate}
             isEndClickDate={isEndClickDate}
-            isEndClickDateHandler={isEndClickDateHandler}
+            setIsEndClickDate={setIsEndClickDate}
             changeStart={changeStart}
             changeEnd={changeEnd}
           />

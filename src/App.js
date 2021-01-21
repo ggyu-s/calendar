@@ -32,6 +32,14 @@ const users = [
     name: "cheol",
   },
 ];
+const user = [
+  {
+    User: {
+      id: 1,
+      name: "ggyu",
+    },
+  },
+];
 /**
  * 캘린더 컴포넌트
  */
@@ -47,18 +55,6 @@ function App() {
   const [changeEnd, setChangeEnd] = useState(""); // 날짜 상태저장
   const [events, setEvents] = useState([]); // 이벤트 저장
   const [event, setEvent] = useState([]); // 한 개의 이벤트 가져오기
-  const [isClickDate, setIsClickDate] = useState(false); // 시작 날짜
-  const [isEndClickDate, setIsEndClickDate] = useState(false); // 끝 날짜
-
-  // 달력에서 클릭한 시작 날짜 표시
-  const isClickDateHandler = useCallback((isClick) => {
-    setIsClickDate(isClick);
-  }, []);
-
-  // 달력에서 클릭한 끝 날짜 표시
-  const isEndClickDateHandler = useCallback((isClick) => {
-    setIsEndClickDate(isClick);
-  }, []);
 
   // 시작 날짜 저장
   const onChangeStartDate = useCallback((startDate) => {
@@ -89,22 +85,22 @@ function App() {
       ...events,
       {
         id: id.current,
+        allDay: "",
         title: text,
         start: changeStart,
         end: isSwitch ? "" : changeEnd,
         backgroundColor: color,
         borderColor: color,
         members: people,
+        whiter: "",
       },
     ]);
     id.current++;
-    setIsClickDate(false);
   };
 
   const onCancel = useCallback(() => {
     setIsVisible(false);
     setIsDrawerVisible(false);
-    setIsClickDate(false);
   }, []);
 
   // 일정 삭제
@@ -193,10 +189,6 @@ function App() {
           dateEnd={dateEnd}
           isStartDate={false}
           users={users}
-          isClickDate={isClickDate}
-          isClickDateHandler={isClickDateHandler}
-          isEndClickDate={isEndClickDate}
-          isEndClickDateHandler={isEndClickDateHandler}
           onChangeStartDate={onChangeStartDate}
           changeStart={changeStart}
           onChangeEndDate={onChangeEndDate}
@@ -211,10 +203,6 @@ function App() {
           update={update}
           onOk={onOk}
           users={users}
-          isClickDate={isClickDate}
-          isClickDateHandler={isClickDateHandler}
-          isEndClickDate={isEndClickDate}
-          isEndClickDateHandler={isEndClickDateHandler}
           onChangeStartDate={onChangeStartDate}
           changeStart={changeStart}
           onChangeEndDate={onChangeEndDate}
