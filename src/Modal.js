@@ -88,20 +88,27 @@ function Modal_test({
   function selectChange(value) {
     setPeople(value);
   }
+
+  const register = () => {
+    if (isUpdate) {
+      onOk(updateText, people, initColor, isSwitch);
+    } else {
+      onOk(text, people, initColor, isSwitch);
+    }
+    setIsSwitch(false);
+    setInitColor("#ff7a45");
+    setCheckbox(false);
+    setPeople("");
+    setText("");
+  };
+
   // 일정을 입력한 뒤 Enter키를 누를 시 등록
   const onKeyDown = (e) => {
     if (e.keyCode === 13) {
-      if (isUpdate) {
-        onOk(updateText, people, initColor, isSwitch);
-      } else {
-        onOk(text, people, initColor, isSwitch);
-      }
-      setIsSwitch(false);
-      setInitColor("#ff7a45");
-      setCheckbox(false);
-      setText("");
+      register();
     }
   };
+
   return (
     <>
       {/* 일정을 등록할 수 있는  모달 */}
@@ -109,17 +116,7 @@ function Modal_test({
         title="일정 등록"
         visible={visible}
         onOk={() => {
-          if (isUpdate) {
-            onOk(updateText, people, initColor, isSwitch);
-            onInitUpdate(false);
-          } else {
-            onOk(text, people, initColor, isSwitch);
-          }
-          setIsSwitch(false);
-          setInitColor("#ff7a45");
-          setCheckbox(false);
-          setPeople("");
-          setText("");
+          register();
         }}
         onCancel={() => {
           onCancel();
