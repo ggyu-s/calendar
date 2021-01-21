@@ -88,7 +88,7 @@ function App() {
         allDay: "",
         title: text,
         start: changeStart,
-        end: isSwitch ? "" : changeEnd,
+        end: isSwitch ? changeStart : changeEnd,
         backgroundColor: color,
         borderColor: color,
         members: people,
@@ -123,7 +123,7 @@ function App() {
 
   // 일정 수정
   const update = useCallback(
-    (id, text, people, color) => {
+    (id, text, people, color, isSwitch) => {
       setEvents(
         events.map((event) => {
           return event.id === id
@@ -131,7 +131,7 @@ function App() {
                 ...event,
                 title: text,
                 start: changeStart,
-                end: changeEnd,
+                end: isSwitch ? changeStart : changeEnd,
                 backgroundColor: color,
                 borderColor: color,
                 members: people,

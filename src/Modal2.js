@@ -56,8 +56,8 @@ function Modal2({
   const onCancel = () => {
     setIsModal(false);
   };
-  const onOk = (text, people, color) => {
-    update(event.id, text, people, color);
+  const onOk = (text, people, color, isSwitch) => {
+    update(event.id, text, people, color, isSwitch);
     setIsModal(false);
   };
 
