@@ -25,10 +25,15 @@ function Dateconfig({
   startTime,
   endTime,
 }) {
+  /**
+   * 시작 시간 변경
+   */
   const onChageStartTime = (e) => {
     setStartTime(String(e._d).substring(16, 24));
   };
-
+  /**
+   * 끝 시간 변경
+   */
   const onChageEndTime = (e) => {
     setEndTime(String(e._d).substring(16, 24));
   };
@@ -53,6 +58,7 @@ function Dateconfig({
         }}
         customInput={<Input suffix={<DownOutlined />} />}
       />
+      {/* 시작 시간 */}
       <TimePicker
         minuteStep={15}
         defaultValue={moment("24:00", "HH:mm")}
@@ -64,24 +70,29 @@ function Dateconfig({
         allowClear={false}
         value={moment(startTime, "HH:mm")}
       />
-      {/* 클린한 끝나는 날짜를 표시 */}
       <span> - </span>
-      <DatePicker
-        locale={ko}
-        dateFormat="yyyy-MM-dd"
-        selected={
-          isEndClickDate
-            ? new Date(changeEnd)
-            : isUpdate
-            ? new Date(dateEnd)
-            : dateEnd
-        }
-        onChange={(date) => {
-          setIsEndClickDate(true);
-          onChangeEndDate(date);
-        }}
-        customInput={<Input suffix={<DownOutlined />} />}
-      />
+      {/* 클린한 끝나는 날짜를 표시 */}
+      {!isSwitch && (
+        <>
+          <DatePicker
+            locale={ko}
+            dateFormat="yyyy-MM-dd"
+            selected={
+              isEndClickDate
+                ? new Date(changeEnd)
+                : isUpdate
+                ? new Date(dateEnd)
+                : dateEnd
+            }
+            onChange={(date) => {
+              setIsEndClickDate(true);
+              onChangeEndDate(date);
+            }}
+            customInput={<Input suffix={<DownOutlined />} />}
+          />
+        </>
+      )}
+      {/* 끝 시간 */}
       <TimePicker
         minuteStep={15}
         defaultValue={moment("24:00", "HH:mm")}
