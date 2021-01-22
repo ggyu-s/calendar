@@ -1,24 +1,7 @@
 import React, { useState } from "react";
-import { Button, Drawer } from "antd";
-import styled from "styled-components";
+import { Button } from "antd";
 import Modal1 from "./Modal";
-
-const DrawerCus = styled(Drawer)`
-  .ant-drawer-footer {
-    text-align: right;
-  }
-  .ant-drawer-footer button:nth-child(2) {
-    margin-left: 8px;
-  }
-  .ant-drawer-content {
-    height: 500px;
-    border-top-left-radius: 20px;
-    border-bottom-left-radius: 20px;
-  }
-  .ant-drawer-content-wrapper {
-    height: 500px;
-  }
-`;
+import { DrawerCus } from "./styles";
 
 /**
  * 일정을 확인 할 수 있습니다.
@@ -56,8 +39,8 @@ function Modal2({
   const onCancel = () => {
     setIsModal(false);
   };
-  const onOk = (text, people, color, isSwitch) => {
-    update(event.id, text, people, color, isSwitch);
+  const onOk = (text, people, color, startTime, endTime, isSwitch) => {
+    update(event.id, text, people, color, startTime, endTime, isSwitch);
     setIsModal(false);
   };
 
@@ -79,11 +62,17 @@ function Modal2({
       >
         <div>일정날짜</div>
         <div>
-          <span>{event.start}</span>
-          {event.start !== event.end ? (
+          <span>
+            {String(event.start).substring(0, 10)}(
+            {String(event.start).substring(11, 16)})
+          </span>
+          {String(event.start).substring(0, 10) !== event.end ? (
             <>
               <span> - </span>
-              <span>{event.end}</span>
+              <span>
+                {String(event.end).substring(0, 10)}(
+                {String(event.end).substring(11, 16)})
+              </span>
             </>
           ) : null}
         </div>

@@ -1,12 +1,14 @@
 import React, { useCallback, useRef, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugsin from "@fullcalendar/daygrid";
+import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { Modal } from "antd";
 import Modal1 from "./Modal";
 import Modal2 from "./Modal2";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import moment from "moment";
+import { FullCalendarWrapper } from "./styles";
 /**
  * 더미데이터
  */
@@ -32,14 +34,7 @@ const users = [
     name: "cheol",
   },
 ];
-const user = [
-  {
-    User: {
-      id: 1,
-      name: "ggyu",
-    },
-  },
-];
+
 /**
  * 캘린더 컴포넌트
  */
@@ -75,7 +70,7 @@ function App() {
   const id = useRef(1);
 
   // 일정 등록
-  const onOk = (text, people, color, isSwitch) => {
+  const onOk = (text, people, color, startTime, endTime, isSwitch) => {
     if (!text) {
       alert("일정을 등록해주세요.");
       return;
@@ -87,12 +82,16 @@ function App() {
         id: id.current,
         allDay: "",
         title: text,
-        start: changeStart,
-        end: isSwitch ? changeStart : changeEnd,
+        start: `${changeStart}T${startTime}`,
+        end: isSwitch
+          ? changeStart
+          : changeStart >= changeEnd
+          ? changeStart
+          : `${changeEnd}T${endTime}`,
         backgroundColor: color,
         borderColor: color,
         members: people,
-        whiter: "",
+        user_id: "",
       },
     ]);
     id.current++;
@@ -123,15 +122,19 @@ function App() {
 
   // 일정 수정
   const update = useCallback(
-    (id, text, people, color, isSwitch) => {
+    (id, text, people, color, startTime, endTime, isSwitch) => {
       setEvents(
         events.map((event) => {
           return event.id === id
             ? {
                 ...event,
                 title: text,
-                start: changeStart,
-                end: isSwitch ? changeStart : changeEnd,
+                start: `${changeStart}T${startTime}`,
+                end: isSwitch
+                  ? changeStart
+                  : changeStart >= changeEnd
+                  ? changeStart
+                  : `${changeEnd}T${endTime}`,
                 backgroundColor: color,
                 borderColor: color,
                 members: people,
@@ -147,9 +150,10 @@ function App() {
   return (
     <>
       {/* 캘린더 */}
-      <div style={{ width: "90%", height: "1000px", margin: "0 auto" }}>
+      <FullCalendarWrapper />
+      <div style={{ width: "800px", height: "500px", margin: "0 auto" }}>
         <FullCalendar
-          plugins={[dayGridPlugsin, interactionPlugin]}
+          plugins={[dayGridPlugsin, interactionPlugin, timeGridPlugin]}
           initialView="dayGridMonth"
           timeZone="UTC"
           events={events}

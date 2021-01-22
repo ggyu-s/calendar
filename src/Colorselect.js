@@ -27,7 +27,7 @@ function ColorSelect({ onColor, colors }) {
           display: "inline-block",
           position: "absolute",
           right: "24px",
-          top: "71px",
+          top: "74px",
           cursor: "pointer",
         }}
         onClick={onClick}
