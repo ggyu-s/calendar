@@ -1,21 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Checkbox, Switch } from "antd";
 import Select from "./Select";
 import Dateconfig from "./Dateconfig";
 import ColorSelect from "./Colorselect";
 import { CalendarInput, Modal1 } from "./styles";
+import DateChange from "./Contexts/SampleContext";
 function Modal_test({
   visible,
   onOk,
   onCancel,
-  dateStart,
-  dateEnd,
   users,
   isUpdate,
-  onChangeStartDate,
-  changeStart,
-  onChangeEndDate,
-  changeEnd,
   title,
   members,
   onInitUpdate,
@@ -31,6 +26,8 @@ function Modal_test({
   const [isEndClickDate, setIsEndClickDate] = useState(false); // 끝 날짜
   const [startTime, setStartTime] = useState("24:00");
   const [endTime, setEndTime] = useState("24:00");
+
+  const { state, actions } = useContext(DateChange);
 
   // 입력창 onChange를 이용하여 저장
   const onChangeText = (e) => {
@@ -60,7 +57,7 @@ function Modal_test({
   const onChangeSwitch = () => {
     setIsSwitch(!isSwitch);
     if (!isSwitch) {
-      onChangeEndDate(changeStart, isSwitch);
+      actions.setDateEnd(state.dateStart);
       setIsEndClickDate(true);
     }
   };
@@ -140,18 +137,12 @@ function Modal_test({
           </div>
           {/* datepicker */}
           <Dateconfig
-            dateStart={dateStart}
-            dateEnd={dateEnd}
-            onChangeStartDate={onChangeStartDate}
-            onChangeEndDate={onChangeEndDate}
             isSwitch={isSwitch}
             isUpdate={isUpdate}
             isClickDate={isClickDate}
             setIsClickDate={setIsClickDate}
             isEndClickDate={isEndClickDate}
             setIsEndClickDate={setIsEndClickDate}
-            changeStart={changeStart}
-            changeEnd={changeEnd}
             setStartTime={setStartTime}
             setEndTime={setEndTime}
             startTime={startTime}

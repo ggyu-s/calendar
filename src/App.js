@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useContext, useRef, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugsin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -9,6 +9,7 @@ import Modal2 from "./Modal2";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import moment from "moment";
 import { FullCalendarWrapper } from "./styles";
+import DateChange from "./Contexts/SampleContext";
 /**
  * 더미데이터
  */
@@ -44,24 +45,15 @@ function App() {
    * 일정 등록 모달
    */
   const [isVisible, setIsVisible] = useState(false);
-  const [dateStart, setDateStart] = useState(""); // 달력 클릭 했을 시에 datepick에 표시 할 상태
-  const [dateEnd, setDateEnd] = useState(""); // 달력 클릭 했을 시에 datepick에 표시 할 상태
-  const [changeStart, setChangeStart] = useState(""); // 날짜 상태저장
-  const [changeEnd, setChangeEnd] = useState(""); // 날짜 상태저장
   const [events, setEvents] = useState([]); // 이벤트 저장
   const [event, setEvent] = useState([]); // 한 개의 이벤트 가져오기
 
-  // 시작 날짜 저장
-  const onChangeStartDate = useCallback((startDate) => {
-    setChangeStart(moment(startDate).format("YYYY-MM-DD"));
-  }, []);
-  // 끝 날짜 저장
-  const onChangeEndDate = useCallback((endDate, isSwitch) => {
-    if (isSwitch) {
-      setChangeEnd(endDate);
-    }
-    setChangeEnd(moment(endDate).format("YYYY-MM-DD"));
-  }, []);
+  const { state, actions } = useContext(DateChange);
+
+  const { dateStart, dateEnd } = state;
+
+  const date_Start = moment(dateStart).format("YYYY-MM-DD");
+  const date_End = moment(dateEnd).format("YYYY-MM-DD");
 
   /**
    * 일정 확인 모달
@@ -82,12 +74,12 @@ function App() {
         id: id.current,
         allDay: "",
         title: text,
-        start: `${changeStart}T${startTime}`,
+        start: `${date_Start}T${startTime}`,
         end: isSwitch
-          ? changeStart
-          : changeStart >= changeEnd
-          ? changeStart
-          : `${changeEnd}T${endTime}`,
+          ? date_Start
+          : date_Start >= date_End
+          ? date_Start
+          : `${date_End}T${endTime}`,
         backgroundColor: color,
         borderColor: color,
         members: people,
@@ -95,6 +87,7 @@ function App() {
       },
     ]);
     id.current++;
+    console.log(events);
   };
 
   const onCancel = useCallback(() => {
@@ -129,12 +122,12 @@ function App() {
             ? {
                 ...event,
                 title: text,
-                start: `${changeStart}T${startTime}`,
+                start: `${date_Start}T${startTime}`,
                 end: isSwitch
-                  ? changeStart
-                  : changeStart >= changeEnd
-                  ? changeStart
-                  : `${changeEnd}T${endTime}`,
+                  ? date_Start
+                  : date_Start >= date_End
+                  ? date_Start
+                  : `${date_End}T${endTime}`,
                 backgroundColor: color,
                 borderColor: color,
                 members: people,
@@ -144,7 +137,7 @@ function App() {
       );
       setIsDrawerVisible(false);
     },
-    [events, changeStart, changeEnd]
+    [events, date_Start, date_End]
   );
 
   return (
@@ -163,10 +156,8 @@ function App() {
           // 날짜 클릭시 모달창 띄우기
           select={(info) => {
             setIsVisible(true);
-            setDateStart(info.start);
-            setDateEnd(info.end);
-            setChangeStart(moment(info.start).format("YYYY-MM-DD"));
-            setChangeEnd(moment(info.end).format("YYYY-MM-DD"));
+            actions.setDateStart(moment(info.start).format("YYYY-MM-DD"));
+            actions.setDateEnd(moment(info.end).format("YYYY-MM-DD"));
           }}
           // 달력 위에 있는 버튼 또는 연도/월 설정
           headerToolbar={{
@@ -189,14 +180,8 @@ function App() {
           visible={isVisible}
           onOk={onOk}
           onCancel={onCancel}
-          dateStart={dateStart}
-          dateEnd={dateEnd}
           isStartDate={false}
           users={users}
-          onChangeStartDate={onChangeStartDate}
-          changeStart={changeStart}
-          onChangeEndDate={onChangeEndDate}
-          changeEnd={changeEnd}
         />
         {/* 일정 확인 모달 컴포넌트 */}
         <Modal2
@@ -207,10 +192,6 @@ function App() {
           update={update}
           onOk={onOk}
           users={users}
-          onChangeStartDate={onChangeStartDate}
-          changeStart={changeStart}
-          onChangeEndDate={onChangeEndDate}
-          changeEnd={changeEnd}
         />
       </div>
     </>

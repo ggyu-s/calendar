@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { DownOutlined } from "@ant-design/icons";
@@ -6,25 +6,25 @@ import { Input, TimePicker } from "antd";
 import { ko } from "date-fns/esm/locale";
 import { DatepickerWrapper } from "./styles";
 import moment from "moment";
+import DateChange from "./Contexts/SampleContext";
 
 function Dateconfig({
-  dateStart,
-  dateEnd,
-  onChangeStartDate,
-  onChangeEndDate,
   isSwitch,
   isUpdate,
   isClickDate,
   setIsClickDate,
   isEndClickDate,
   setIsEndClickDate,
-  changeStart,
-  changeEnd,
   setStartTime,
   setEndTime,
   startTime,
   endTime,
 }) {
+  const { state, actions } = useContext(DateChange);
+
+  const { dateStart, dateEnd } = state;
+
+  let datepick = "";
   /**
    * 시작 시간 변경
    */
@@ -38,26 +38,50 @@ function Dateconfig({
     setEndTime(String(e._d).substring(16, 24));
   };
 
-  return (
-    <>
-      <DatepickerWrapper />
-      {/* 클린한 시작날짜를 표시 */}
+  if (String(new Date(dateStart)) === "Invalid Date") {
+    console.log(true);
+  } else {
+    datepick = (
       <DatePicker
         locale={ko}
         dateFormat="yyyy-MM-dd"
         selected={
           isClickDate
-            ? new Date(changeStart)
+            ? new Date(dateStart)
             : isUpdate
             ? new Date(dateStart)
-            : dateStart
+            : new Date(dateStart)
         }
         onChange={(date) => {
           setIsClickDate(true);
-          onChangeStartDate(date);
+          actions.setDateStart(moment(date).format("YYYY-MM-DD"));
         }}
         customInput={<Input suffix={<DownOutlined />} />}
       />
+    );
+  }
+
+  return (
+    <>
+      <DatepickerWrapper />
+      {/* 클린한 시작날짜를 표시 */}
+      {/* <DatePicker
+        locale={ko}
+        dateFormat="yyyy-MM-dd"
+        selected={
+          isClickDate
+            ? new Date(dateStart)
+            : isUpdate
+            ? new Date(dateStart)
+            : new Date(dateStart)
+        }
+        onChange={(date) => {
+          setIsClickDate(true);
+          actions.setDateStart(moment(date).format("YYYY-MM-DD"));
+        }}
+        customInput={<Input suffix={<DownOutlined />} />}
+      /> */}
+      {datepick}
       {/* 시작 시간 */}
       <TimePicker
         minuteStep={15}
@@ -79,14 +103,14 @@ function Dateconfig({
             dateFormat="yyyy-MM-dd"
             selected={
               isEndClickDate
-                ? new Date(changeEnd)
+                ? new Date(dateEnd)
                 : isUpdate
                 ? new Date(dateEnd)
-                : dateEnd
+                : null
             }
             onChange={(date) => {
               setIsEndClickDate(true);
-              onChangeEndDate(date);
+              actions.setDateEnd(moment(date).format("YYYY-MM-DD"));
             }}
             customInput={<Input suffix={<DownOutlined />} />}
           />

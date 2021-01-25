@@ -1,25 +1,17 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Button } from "antd";
 import Modal1 from "./Modal";
 import { DrawerCus } from "./styles";
+import DateChange from "./Contexts/SampleContext";
 
 /**
  * 일정을 확인 할 수 있습니다.
  */
-function Modal2({
-  visible,
-  onClose,
-  event,
-  remove,
-  update,
-  users,
-  onChangeStartDate,
-  changeStart,
-  onChangeEndDate,
-  changeEnd,
-}) {
+function Modal2({ visible, onClose, event, remove, update, users }) {
   const [isModal, setIsModal] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
+
+  const { actions } = useContext(DateChange);
 
   // 첫 렌더링 할 때 map.undefined 오류가 발생하기 때문에 if문을 사용
   let member;
@@ -32,6 +24,8 @@ function Modal2({
   const onClick = () => {
     setIsModal(!isModal);
     setIsUpdate(true);
+    actions.setDateStart(event.start);
+    actions.setDateEnd(event.end);
   };
   const onUpdate = (isUpdate) => {
     setIsUpdate(isUpdate);
@@ -83,8 +77,6 @@ function Modal2({
       </DrawerCus>
       <Modal1
         visible={isModal}
-        dateStart={event.start}
-        dateEnd={event.end}
         onOk={onOk}
         onCancel={onCancel}
         users={users}
@@ -93,10 +85,6 @@ function Modal2({
         title={event.title}
         members={event.members}
         onInitUpdate={onInitUpdate}
-        onChangeStartDate={onChangeStartDate}
-        changeStart={changeStart}
-        onChangeEndDate={onChangeEndDate}
-        changeEnd={changeEnd}
         saveColor={event.backgroundColor}
       />
     </>
