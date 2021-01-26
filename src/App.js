@@ -50,10 +50,7 @@ function App() {
 
   const { state, actions } = useContext(DateChange);
 
-  const { dateStart, dateEnd } = state;
-
-  const date_Start = moment(dateStart).format("YYYY-MM-DD");
-  const date_End = moment(dateEnd).format("YYYY-MM-DD");
+  const { dateStart, dateEnd, startTime, endTime } = state;
 
   /**
    * 일정 확인 모달
@@ -62,7 +59,7 @@ function App() {
   const id = useRef(1);
 
   // 일정 등록
-  const onOk = (text, people, color, startTime, endTime, isSwitch) => {
+  const onOk = (text, people, color, isSwitch) => {
     if (!text) {
       alert("일정을 등록해주세요.");
       return;
@@ -72,14 +69,14 @@ function App() {
       ...events,
       {
         id: id.current,
-        allDay: "",
+        allDay: isSwitch ? 1 : 0,
         title: text,
-        start: `${date_Start}T${startTime}`,
+        start: `${dateStart}T${startTime}`,
         end: isSwitch
-          ? date_Start
-          : date_Start >= date_End
-          ? date_Start
-          : `${date_End}T${endTime}`,
+          ? `${dateStart}T${endTime}`
+          : dateStart >= dateEnd
+          ? `${dateStart}T${endTime}`
+          : `${dateEnd}T${endTime}`,
         backgroundColor: color,
         borderColor: color,
         members: people,
@@ -115,19 +112,20 @@ function App() {
 
   // 일정 수정
   const update = useCallback(
-    (id, text, people, color, startTime, endTime, isSwitch) => {
+    (id, text, people, color, isSwitch) => {
       setEvents(
         events.map((event) => {
           return event.id === id
             ? {
                 ...event,
                 title: text,
-                start: `${date_Start}T${startTime}`,
+                allDay: isSwitch ? 1 : 0,
+                start: `${dateStart}T${startTime}`,
                 end: isSwitch
-                  ? date_Start
-                  : date_Start >= date_End
-                  ? date_Start
-                  : `${date_End}T${endTime}`,
+                  ? `${dateStart}T${endTime}`
+                  : dateStart >= dateEnd
+                  ? `${dateStart}T${endTime}`
+                  : `${dateEnd}T${endTime}`,
                 backgroundColor: color,
                 borderColor: color,
                 members: people,
@@ -137,7 +135,7 @@ function App() {
       );
       setIsDrawerVisible(false);
     },
-    [events, date_Start, date_End]
+    [events, dateStart, dateEnd, startTime, endTime]
   );
 
   return (

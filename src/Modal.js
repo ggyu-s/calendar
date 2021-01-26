@@ -11,10 +11,8 @@ function Modal_test({
   onCancel,
   users,
   isUpdate,
-  title,
-  members,
-  onInitUpdate,
-  saveColor,
+  setIsUpdate,
+  event,
 }) {
   const [text, setText] = useState("");
   const [checkbox, setCheckbox] = useState(false);
@@ -22,10 +20,6 @@ function Modal_test({
   const [isSwitch, setIsSwitch] = useState(false);
   const [initColor, setInitColor] = useState("#ff7a45");
   const [updateText, setUpdateText] = useState("");
-  const [isClickDate, setIsClickDate] = useState(false); // 시작 날짜
-  const [isEndClickDate, setIsEndClickDate] = useState(false); // 끝 날짜
-  const [startTime, setStartTime] = useState("24:00");
-  const [endTime, setEndTime] = useState("24:00");
 
   const { state, actions } = useContext(DateChange);
 
@@ -40,11 +34,12 @@ function Modal_test({
 
   useEffect(() => {
     if (isUpdate) {
-      members && setCheckbox(true);
-      setUpdateText(title);
-      setInitColor(saveColor);
+      event.members && setCheckbox(true);
+      event.allDay === 1 ? setIsSwitch(true) : setIsSwitch(false);
+      setUpdateText(event.title);
+      setInitColor(event.backgroundColor);
     }
-  }, [title, members, isUpdate, saveColor]);
+  }, [event, isUpdate]);
 
   // checkBox가 true인지 false인지 저장
   const onChangeCheckBox = (e) => {
@@ -58,7 +53,6 @@ function Modal_test({
     setIsSwitch(!isSwitch);
     if (!isSwitch) {
       actions.setDateEnd(state.dateStart);
-      setIsEndClickDate(true);
     }
   };
   // 캘린더 일정에 background color 변경
@@ -72,17 +66,17 @@ function Modal_test({
 
   const register = () => {
     if (isUpdate) {
-      onOk(updateText, people, initColor, startTime, endTime, isSwitch);
+      onOk(updateText, people, initColor, isSwitch);
     } else {
-      onOk(text, people, initColor, startTime, endTime, isSwitch);
+      onOk(text, people, initColor, isSwitch);
     }
     setIsSwitch(false);
     setInitColor("#ff7a45");
     setCheckbox(false);
     setPeople("");
     setText("");
-    setStartTime("24:00");
-    setEndTime("24:00");
+    actions.setStartTime("00:00");
+    actions.setEndTime("00:00");
   };
 
   // 일정을 입력한 뒤 Enter키를 누를 시 등록
@@ -108,8 +102,10 @@ function Modal_test({
           setInitColor("#ff7a45");
           setPeople("");
           setText("");
+          actions.setStartTime("00:00");
+          actions.setEndTime("00:00");
           if (isUpdate) {
-            onInitUpdate(false);
+            setIsUpdate(false);
           }
         }}
         okText="등록"
@@ -136,18 +132,7 @@ function Modal_test({
             종일
           </div>
           {/* datepicker */}
-          <Dateconfig
-            isSwitch={isSwitch}
-            isUpdate={isUpdate}
-            isClickDate={isClickDate}
-            setIsClickDate={setIsClickDate}
-            isEndClickDate={isEndClickDate}
-            setIsEndClickDate={setIsEndClickDate}
-            setStartTime={setStartTime}
-            setEndTime={setEndTime}
-            startTime={startTime}
-            endTime={endTime}
-          />
+          <Dateconfig isSwitch={isSwitch} />
           {/* 색상 선택 */}
           <ColorSelect onColor={onColor} colors={initColor} />
         </div>
@@ -163,7 +148,7 @@ function Modal_test({
           <Select
             selectChange={selectChange}
             users={users}
-            members={members}
+            members={event.members}
             isUpdate={isUpdate}
             checkBox={checkbox}
           />

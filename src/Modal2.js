@@ -18,23 +18,21 @@ function Modal2({ visible, onClose, event, remove, update, users }) {
   if (event.members) {
     member = event.members.map((member, idx) => <div key={idx}>{member}</div>);
   }
-  const onInitUpdate = (isUpdate) => {
-    setIsUpdate(isUpdate);
-  };
   const onClick = () => {
     setIsModal(!isModal);
     setIsUpdate(true);
-    actions.setDateStart(event.start);
-    actions.setDateEnd(event.end);
+    actions.setDateStart(String(event.start).substring(0, 10));
+    actions.setDateEnd(String(event.end).substring(0, 10));
+    actions.setStartTime(String(event.start).substring(11, 16));
+    actions.setEndTime(String(event.end).substring(11, 16));
   };
-  const onUpdate = (isUpdate) => {
-    setIsUpdate(isUpdate);
-  };
+
   const onCancel = () => {
     setIsModal(false);
   };
-  const onOk = (text, people, color, startTime, endTime, isSwitch) => {
-    update(event.id, text, people, color, startTime, endTime, isSwitch);
+
+  const onOk = (text, people, color, isSwitch) => {
+    update(event.id, text, people, color, isSwitch);
     setIsModal(false);
   };
 
@@ -60,7 +58,8 @@ function Modal2({ visible, onClose, event, remove, update, users }) {
             {String(event.start).substring(0, 10)}(
             {String(event.start).substring(11, 16)})
           </span>
-          {String(event.start).substring(0, 10) !== event.end ? (
+          {String(event.start).substring(0, 10) !==
+          String(event.end).substring(0, 10) ? (
             <>
               <span> - </span>
               <span>
@@ -80,12 +79,9 @@ function Modal2({ visible, onClose, event, remove, update, users }) {
         onOk={onOk}
         onCancel={onCancel}
         users={users}
-        onUpdate={onUpdate}
         isUpdate={isUpdate}
-        title={event.title}
-        members={event.members}
-        onInitUpdate={onInitUpdate}
-        saveColor={event.backgroundColor}
+        setIsUpdate={setIsUpdate}
+        event={event}
       />
     </>
   );
